@@ -1,12 +1,8 @@
-import {Link, useParams} from "react-router-dom";
+import {Link} from "react-router-dom";
 import AccountNav from "./AccountNav.jsx";
-import {useEffect, useState} from "react";
-import axios from "axios";
-import PlaceImg from "./PlaceImg";
 import Navbar from "../../components/navbar/Navbar.jsx";
 import Header from "../../components/header/Header.jsx";
 import useFetch from "../../hooks/useFetch.js";
-import { da } from "date-fns/locale";
 import "./account.scss";
 export default function PlacesPage() {
   const { data } = useFetch("/hotels");
@@ -25,37 +21,31 @@ export default function PlacesPage() {
             Add new place
           </Link>
         </div>
-        <div className="w-full flex justify-center mt-8 gap-2 mb-8" >
-          {data.length > 0 && data.map(place => (
-            <div className="single">
-                <div className="singleContainer">
-                    <div className="top">
-                        <div className="left">
-                        <Link to={'/account/places/'+place._id} className="flex-colyy gap-4 bg-gray-200 rounded-2xl overflow-hidden" ></Link>
-                            <div className="editButton">Edit</div>
-                            <h1 className="title">Information</h1>
-                            <div className="item">
-                                <img
-                                    src="https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260"
-                                    alt=""
-                                    className="itemImg"
-                                />
-                                <div className="details">
-                                    <h2 className="text-xl">{place.title}</h2>
-                                    <div className="detailItem">
-                                    <p className="text-sm mt-2">{place.desc}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="right">
-                        </div>
-                    </div>
+        <div className="container m-auto mt-6">
+          <div style={{
+            width: "100%",
+            maxWidth: "1024px",
+            display: "flex",
+            justifyContent: "space-between",
+            gap: "20px"
+          }}>
+            <>
+              {data.length > 0 && data.map(place => (
+                <div className="pListItem" key={place._id}>
+                  <img
+                    src="https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260"
+                    alt=""
+                    className="pListImg rounded-2xl object-cover aspect-square"
+                  />
+                  <div className="pListTitles">
+                    <h1>{place.title}</h1>
+                    <h2>{place.desc}</h2>
+                  </div>
                 </div>
-            </div>
-          ))}
-          
-        </div>
+              ))}
+            </>
+          </div>
+      </div>  
     </div>
   );
 }
