@@ -5,6 +5,7 @@ import { AuthContext } from "../../context/AuthContext";
 import "./login.css";
 import Navbar from "../../components/navbar/Navbar";
 import Header from "../../components/header/Header";
+import Footer from "../../components/footer/Footer";
 
 
 const Login = () => {
@@ -38,7 +39,7 @@ const Login = () => {
     <div>
       <Navbar />
       <Header type="list" />
-      <div className="mt-4 grow flex items-center justify-around">
+      <div className="mt-20 grow flex items-center justify-around">
         <div className="mb-64">
           <h1 className="text-4xl text-center mb-4">Login</h1>
           <form className="max-w-md mx-auto" onSubmit={handleClick}>
@@ -58,8 +59,9 @@ const Login = () => {
             </div>
           </form>
         </div>
+        
       </div>
-      
+
     </div>
     
     

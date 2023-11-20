@@ -10,6 +10,10 @@
   padding: 50px;
 }
 
+.mailInputContainer {
+  display: flex;
+  justify-content: space-between;
+}
 .mailInputContainer > input {
   width: 300px;
   padding: 10px;
