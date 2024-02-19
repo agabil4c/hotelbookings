@@ -146,3 +146,12 @@ export const roomInputs = [
     placeholder: "2",
   },
 ];
+
+export const roleInputs = [
+  {
+    id: "name",
+    label:"Role Name",
+    type:"text",
+    placeholder: "Role name"
+  }
+];

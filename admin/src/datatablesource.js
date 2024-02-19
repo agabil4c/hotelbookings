@@ -7,7 +7,7 @@ export const userColumns = [
     renderCell: (params) => {
       return (
         <div className="cellWithImg">
-          <img className="cellImg" src={params.row.img || "https://i.ibb.co/MBtjqXQ/no-avatar.gif"} alt="avatar" />
+          {/* <img className="cellImg" src={params.row.img || "https://i.ibb.co/MBtjqXQ/no-avatar.gif"} alt="avatar" /> */}
           {params.row.username}
         </div>
       );
@@ -82,4 +82,9 @@ export const roomColumns = [
     headerName: "Max People",
     width: 100,
   },
+];
+
+export const roleColumns = [
+  {field: "_id", headerName: "ID", width:70},
+  {field: "name", headerName: "Role name", width: 230}
 ];
