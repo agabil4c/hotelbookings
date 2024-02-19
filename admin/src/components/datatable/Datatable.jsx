@@ -4,12 +4,17 @@ import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useFetch from "../../hooks/useFetch";
 import axios from "axios";
+import { Modal } from "@mui/base";
+import { Box } from "@mui/material";
 
 const Datatable = ({columns}) => {
   const location = useLocation();
   const path = location.pathname.split("/")[1];
   const [list, setList] = useState();
   const { data } = useFetch(`/${path}`);
+
+  const [open, setOpen] = useState(false);
+  const [userObj, setUserObj] = useState({});
 
   useEffect(() => {
     setList(data);
@@ -22,6 +27,16 @@ const Datatable = ({columns}) => {
     } catch (err) {}
   };
 
+  const handleOpen = (row) => {
+    console.log("Opened modal "+ JSON.stringify(row));
+    setUserObj(row);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const actionColumn = [
     {
       field: "action",
@@ -30,9 +45,10 @@ const Datatable = ({columns}) => {
       renderCell: (params) => {
         return (
           <div className="cellAction">
-            <Link to="/users/test" style={{ textDecoration: "none" }}>
+            {/* <Link to="/users/test" style={{ textDecoration: "none" }}>
               <div className="viewButton">View</div>
-            </Link>
+            </Link> */}
+            <button onClick={handleOpen(params.row)} className="viewButton">View</button>
             <div
               className="deleteButton"
               onClick={() => handleDelete(params.row._id)}
@@ -61,6 +77,18 @@ const Datatable = ({columns}) => {
         checkboxSelection
         getRowId={(row) => row._id}
       />
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+      >
+        <Box>
+          <h2>User name</h2>
+          <p>Sample text</p>
+        </Box>
+
+      </Modal>
     </div>
   );
 };

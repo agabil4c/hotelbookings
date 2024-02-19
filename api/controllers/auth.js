@@ -22,21 +22,43 @@ export const register = async (req, res, next) => {
 export const login = async (req, res, next) => {
   try {
     const user = await User.findOne({ username: req.body.username });
-    if (!user) return next(createError(404, "User not found!"));
+    const user_aggre = await User.aggregate([
+      {
+        $match: {
+          username :req.body.username
+        }
+      },
+      {
+        $lookup: {
+          from: "roles",
+          let: {
+            "serchId": {$toObjectId: "$role_id"}
+          },
+          pipeline: [
+            {"$match": {"$expr":[{"_id":"$serchId"}]}},
+            {"$project": {"_id":1,"permissions":1}}
+          ],
+          as: "role"
+        }
+      },
+      {
+        $unwind: "$role"
+      }
+    ]);
+    if (!user_aggre) return next(createError(404, "User not found!"));
 
     const isPasswordCorrect = await bcrypt.compare(
       req.body.password,
-      user.password
+      user_aggre[0].password
     );
     if (!isPasswordCorrect)
       return next(createError(400, "Wrong password or username!"));
 
     const token = jwt.sign(
-      { id: user._id, isAdmin: user.isAdmin },
+      { id: user_aggre[0]._id, isAdmin: user_aggre[0].isAdmin, permissions: user_aggre[0].role.permissions },
       process.env.JWT
     );
-
-    const { password, isAdmin, ...otherDetails } = user._doc;
+    const { password, isAdmin, role_id, ...otherDetails } = user_aggre[0];
     res
       .cookie("access_token", token, {
         httpOnly: true,

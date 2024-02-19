@@ -11,6 +11,7 @@ import {
 } from "../controllers/hotel.js";
 import Hotel from "../models/Hotel.js";
 import {verifyAdmin} from "../utils/verifyToken.js"
+import { verifyToken } from "../middleware/rbacMiddleware.js";
 const router = express.Router();
 
 //CREATE
@@ -25,7 +26,7 @@ router.delete("/:id", verifyAdmin, deleteHotel);
 router.get("/find/:id", getHotel);
 //GET ALL
 
-router.get("/", getHotels);
+router.get("/", verifyToken("view","Hotels"), getHotels);
 router.get("/countByCity", countByCity);
 router.get("/countByType", countByType);
 router.get("/room/:id", getHotelRooms);

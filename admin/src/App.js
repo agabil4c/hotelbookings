@@ -1,26 +1,40 @@
 import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
 import List from "./pages/list/List";
+import UsersTable from "./components/usersTable/UsersTable";
 import Single from "./pages/single/Single";
 import New from "./pages/new/New";
+import NewRole from "./pages/newRole/NewRole";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import { productInputs, userInputs } from "./formSource";
 import "./style/dark.scss";
 import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from "./context/AuthContext";
-import { hotelColumns, roomColumns, userColumns } from "./datatablesource";
+import { hotelColumns, roomColumns, userColumns, roleColumns } from "./datatablesource";
 import NewHotel from "./pages/newHotel/NewHotel";
 import NewRoom from "./pages/newRoom/NewRoom";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
 
-  const ProtectedRoute = ({ children }) => {
+  const ProtectedRoute = ({ children, module, action }) => {
     const { user } = useContext(AuthContext);
-
+    
     if (!user) {
       return <Navigate to="/login" />;
+    }
+    var permissions = user.role.permission;
+    var hasPermission = permissions.some(el => el.name === module && el.rules[action])
+    if (!hasPermission && module != "Home") {
+      // Swal.fire("Access Denied!","","warning", timer: 1500);
+      Swal.fire({
+        icon: "warning",
+        title: "Access Denied!",
+        timer:2000
+      });
+      return <Navigate to="/" />;
     }
 
     return children;
@@ -35,7 +49,7 @@ function App() {
             <Route
               index
               element={
-                <ProtectedRoute>
+                <ProtectedRoute module={"Home"} action={"view"}>
                   <Home />
                 </ProtectedRoute>
               }
@@ -44,15 +58,16 @@ function App() {
               <Route
                 index
                 element={
-                  <ProtectedRoute>
-                    <List columns={userColumns} />
+                  <ProtectedRoute module={"Users"} action={"view"}>
+                    {/* <List columns={userColumns} /> */}
+                    <UsersTable />
                   </ProtectedRoute>
                 }
               />
               <Route
                 path=":userId"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute module={"Users"} action={"view"}>
                     <Single />
                   </ProtectedRoute>
                 }
@@ -60,8 +75,34 @@ function App() {
               <Route
                 path="new"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute module={"Users"} action={"modify"}>
                     <New inputs={userInputs} title="Add New User" />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
+            <Route path="roles">
+              <Route
+                index
+                element={
+                  <ProtectedRoute module={"Roles"} action={"view"}>
+                    <List columns={roleColumns} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path=":userId"
+                element={
+                  <ProtectedRoute module={"Roles"} action={"view"}>
+                    <Single />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="new"
+                element={
+                  <ProtectedRoute module={"Roles"} action={"modify"}>
+                    <NewRole />
                   </ProtectedRoute>
                 }
               />
@@ -70,7 +111,7 @@ function App() {
               <Route
                 index
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute module={"Hotels"} action={"view"}>
                     <List columns={hotelColumns} />
                   </ProtectedRoute>
                 }
@@ -78,7 +119,7 @@ function App() {
               <Route
                 path=":productId"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute module={"Hotels"} action={"view"}>
                     <Single />
                   </ProtectedRoute>
                 }
@@ -86,7 +127,7 @@ function App() {
               <Route
                 path="new"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute module={"Hotels"} action={"modify"}>
                     <NewHotel  />
                   </ProtectedRoute>
                 }
