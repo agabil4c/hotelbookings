@@ -4,6 +4,7 @@ import {
   deleteUser,
   getUser,
   getUsers,
+  changeStatus
 } from "../controllers/user.js";
 import { verifyAdmin, verifyToken, verifyUser } from "../utils/verifyToken.js";
 
@@ -29,6 +30,9 @@ router.delete("/:id", verifyUser, deleteUser);
 
 //GET
 router.get("/:id", verifyUser, getUser);
+
+//CHANGE STATUS
+router.post("/status/:id", verifyUser, changeStatus);
 
 //GET ALL
 router.get("/", verifyAdmin, getUsers);

@@ -34,6 +34,10 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    status: {
+      type: String,
+      default: "suspended"
+    }
   },
   { timestamps: true }
 );
