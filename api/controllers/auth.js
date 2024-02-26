@@ -25,25 +25,25 @@ export const login = async (req, res, next) => {
     const user_aggre = await User.aggregate([
       {
         $match: {
-          username :req.body.username
-        }
+          username: req.body.username,
+        },
       },
       {
         $lookup: {
           from: "roles",
           let: {
-            "serchId": {$toObjectId: "$role_id"}
+            serchId: { $toObjectId: "$role_id" },
           },
           pipeline: [
-            {"$match": {"$expr":[{"_id":"$serchId"}]}},
-            {"$project": {"_id":1,"permissions":1}}
+            { $match: { $expr: [{ _id: "$serchId" }] } },
+            { $project: { _id: 1, permission: 1 } },
           ],
-          as: "role"
-        }
+          as: "role",
+        },
       },
       {
-        $unwind: "$role"
-      }
+        $unwind: "$role",
+      },
     ]);
     if (!user_aggre) return next(createError(404, "User not found!"));
 
@@ -55,7 +55,11 @@ export const login = async (req, res, next) => {
       return next(createError(400, "Wrong password or username!"));
 
     const token = jwt.sign(
-      { id: user_aggre[0]._id, isAdmin: user_aggre[0].isAdmin, permissions: user_aggre[0].role.permissions },
+      {
+        id: user_aggre[0]._id,
+        isAdmin: user_aggre[0].isAdmin,
+        permissions: user_aggre[0].role.permissions,
+      },
       process.env.JWT
     );
     const { password, isAdmin, role_id, ...otherDetails } = user_aggre[0];

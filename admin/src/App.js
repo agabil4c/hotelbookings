@@ -12,7 +12,12 @@ import "./style/dark.scss";
 import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from "./context/AuthContext";
-import { hotelColumns, roomColumns, userColumns, roleColumns } from "./datatablesource";
+import {
+  hotelColumns,
+  roomColumns,
+  userColumns,
+  roleColumns,
+} from "./datatablesource";
 import NewHotel from "./pages/newHotel/NewHotel";
 import NewRoom from "./pages/newRoom/NewRoom";
 
@@ -21,18 +26,20 @@ function App() {
 
   const ProtectedRoute = ({ children, module, action }) => {
     const { user } = useContext(AuthContext);
-    
+
     if (!user) {
       return <Navigate to="/login" />;
     }
     var permissions = user.role.permission;
-    var hasPermission = permissions.some(el => el.name === module && el.rules[action])
-    if (!hasPermission && module != "Home") {
+    var hasPermission = permissions.some(
+      (el) => el.name === module && el.rules[action]
+    );
+    if (!hasPermission && module !== "Home") {
       // Swal.fire("Access Denied!","","warning", timer: 1500);
       Swal.fire({
         icon: "warning",
         title: "Access Denied!",
-        timer:2000
+        timer: 2000,
       });
       return <Navigate to="/" />;
     }
@@ -128,7 +135,7 @@ function App() {
                 path="new"
                 element={
                   <ProtectedRoute module={"Hotels"} action={"modify"}>
-                    <NewHotel  />
+                    <NewHotel />
                   </ProtectedRoute>
                 }
               />
@@ -154,7 +161,7 @@ function App() {
                 path="new"
                 element={
                   <ProtectedRoute>
-                    <NewRoom  />
+                    <NewRoom />
                   </ProtectedRoute>
                 }
               />

@@ -1,4 +1,5 @@
 import "./UserTable.scss";
+
 import axios from "axios";
 import { useEffect, useState } from "react"
 import Sidebar from "../../components/sidebar/Sidebar";
@@ -12,8 +13,10 @@ import LinearProgress from '@mui/material/LinearProgress';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
+import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import Swal from "sweetalert2";
+import { Link, useLocation } from "react-router-dom";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { userColumns } from "../../datatablesource";
 
@@ -45,6 +48,8 @@ function UsersTable() {
     const [users,setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
+    const location = useLocation();
+    const path = location.pathname.split("/")[1];
     const [deleteModal, setDeleteModal] = useState(false);
     const [userObj, setUserObj] = useState({});
 
@@ -132,13 +137,22 @@ function UsersTable() {
         {
           field: "action",
           headerName: "Action",
-          width: 200,
+          width: 100,
           renderCell: (params) => {
             return (
-                <Stack direction="row" spacing={2}>
-                    <Button onClick={() => handleOpen(params.row)} variant="contained">View</Button>
-                    <Button onClick={() => handleDeleteModalOpen(params.row)} variant="contained">DELETE</Button>
-                </Stack>
+                
+                <div className="cellAction">
+                {/* <Link to="/users/test" style={{ textDecoration: "none" }}>
+                  <div className="viewButton">View</div>
+                </Link> */}
+                <button onClick={() => handleOpen(params.row)} className="viewButton"><VisibilityIcon/></button>
+                <div
+                  className="deleteButton"
+                  onClick={() => handleDeleteModalOpen(params.row)}
+                >
+                  <DeleteIcon/>
+                </div>
+              </div>
             );
           },
         },
@@ -152,20 +166,24 @@ function UsersTable() {
                 {loading ? (
                     <LinearProgress color="secondary"/>
                 ):(
-                    <>
-                        <div style={{ height: 400, width: '100%' }}>
-                            <DataGrid 
-                                rows={users}
-                                columns={userColumns.concat(actionColumn)}
-                                initialState={{
-                                    pagination: {
-                                        paginationModel: { page: 0, pageSize: 5 }
-                                    }
-                                }}
-                                pageSizeOptions={[5, 10]}
-                                getRowId={(row) => row._id}
-                            />
+                    <div className="datatable">
+                        <div className="datatableTitle">
+                            {path}
+                            <Link to={`/${path}/new`} className="link">
+                            Add New
+                            </Link>
                         </div>
+                        <DataGrid 
+                            rows={users}
+                            columns={userColumns.concat(actionColumn)}
+                            initialState={{
+                                pagination: {
+                                    paginationModel: { page: 0, pageSize: 5 }
+                                }
+                            }}
+                            pageSizeOptions={[5, 10]}
+                            getRowId={(row) => row._id}
+                        />
                         <Modal
                             open={open}
                             onClose={handleClose}
@@ -244,7 +262,7 @@ function UsersTable() {
                                 </Card>
                             </Box>
                         </Modal>
-                    </>
+                    </div>
                 )}
                 
             </div>
