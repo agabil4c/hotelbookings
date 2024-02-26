@@ -36,7 +36,7 @@ export const login = async (req, res, next) => {
           },
           pipeline: [
             {"$match": {"$expr":[{"_id":"$serchId"}]}},
-            {"$project": {"_id":1,"permissions":1}}
+            {"$project": {"_id":1,"permission":1}}
           ],
           as: "role"
         }
@@ -55,7 +55,7 @@ export const login = async (req, res, next) => {
       return next(createError(400, "Wrong password or username!"));
 
     const token = jwt.sign(
-      { id: user_aggre[0]._id, isAdmin: user_aggre[0].isAdmin, permissions: user_aggre[0].role.permissions },
+      { id: user_aggre[0]._id, isAdmin: user_aggre[0].isAdmin, permissions: user_aggre[0].role.permission },
       process.env.JWT
     );
     const { password, isAdmin, role_id, ...otherDetails } = user_aggre[0];
