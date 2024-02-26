@@ -58,7 +58,7 @@ export const login = async (req, res, next) => {
       {
         id: user_aggre[0]._id,
         isAdmin: user_aggre[0].isAdmin,
-        permissions: user_aggre[0].role.permissions,
+        permissions: user_aggre[0].role.permission,
       },
       process.env.JWT
     );
