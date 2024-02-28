@@ -85,6 +85,6 @@ export const roomColumns = [
 ];
 
 export const roleColumns = [
-  { field: "_id", headerName: "ID", width: 70 },
-  { field: "name", headerName: "Role name", width: 230 },
+  { field: "_id", headerName: "ID", width: 100 },
+  { field: "name", headerName: "Role name", width: 150 },
 ];

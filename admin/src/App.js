@@ -7,19 +7,15 @@ import New from "./pages/new/New";
 import NewRole from "./pages/newRole/NewRole";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { productInputs, userInputs } from "./formSource";
+import { userInputs } from "./formSource";
 import "./style/dark.scss";
 import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from "./context/AuthContext";
-import {
-  hotelColumns,
-  roomColumns,
-  userColumns,
-  roleColumns,
-} from "./datatablesource";
+import { hotelColumns, roomColumns, roleColumns } from "./datatablesource";
 import NewHotel from "./pages/newHotel/NewHotel";
 import NewRoom from "./pages/newRoom/NewRoom";
+import RolesTable from "./components/rolesTable/rolesTable";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -93,7 +89,8 @@ function App() {
                 index
                 element={
                   <ProtectedRoute module={"Roles"} action={"view"}>
-                    <List columns={roleColumns} />
+                    {/* <List columns={roleColumns} /> */}
+                    <RolesTable />
                   </ProtectedRoute>
                 }
               />

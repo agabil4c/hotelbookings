@@ -33,9 +33,6 @@ const Datatable = ({columns}) => {
     setOpen(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const actionColumn = [
     {
@@ -77,18 +74,7 @@ const Datatable = ({columns}) => {
         checkboxSelection
         getRowId={(row) => row._id}
       />
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="parent-modal-title"
-        aria-describedby="parent-modal-description"
-      >
-        <Box>
-          <h2>User name</h2>
-          <p>Sample text</p>
-        </Box>
-
-      </Modal>
+      
     </div>
   );
 };

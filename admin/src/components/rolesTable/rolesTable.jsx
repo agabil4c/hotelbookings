@@ -1,12 +1,19 @@
-import "./UserTable.scss";
+import "./rolesTable.scss";
 import axios from "axios";
 import { useEffect, useState } from "react"
-import Sidebar from "../../components/sidebar/Sidebar";
-import Navbar from "../../components/navbar/Navbar";
+import Sidebar from "../sidebar/Sidebar";
+import Navbar from "../navbar/Navbar";
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 import LinearProgress from '@mui/material/LinearProgress';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -15,9 +22,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Swal from "sweetalert2";
 import { Link, useLocation } from "react-router-dom";
-import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
-import { userColumns } from "../../datatablesource";
-import { CardHeader } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import { roleColumns } from "../../datatablesource";
+import { permissions } from "../../pageActions";
+import { CardHeader, Checkbox, FormControlLabel } from "@mui/material";
 
 const style = {
     position: 'absolute',
@@ -43,18 +51,19 @@ const style = {
     p: 4,
   };
 
-function UsersTable() {
-    const [users,setUsers] = useState([]);
+function RolesTable() {
+    const [roles,setRoles] = useState([]);
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const location = useLocation();
     const path = location.pathname.split("/")[1];
     const [deleteModal, setDeleteModal] = useState(false);
-    const [userObj, setUserObj] = useState({});
+    const [roleObj, setRoleObj] = useState({});
+    var count = 0;
 
     const handleOpen = (row) => {
         setOpen(true);
-        setUserObj(row);
+        setRoleObj(row);
     };
 
     const handleClose = () => {
@@ -63,37 +72,44 @@ function UsersTable() {
 
     const handleDeleteModalOpen = (row) => {
         setDeleteModal(true);
-        setUserObj(row);
+        setRoleObj(row);
     };
 
     const handleDeleteModalClose = () => {
         setDeleteModal(false);
     };
 
-    const handleUserStatus = async (status,rowId) => {
-        try {
-            await axios.post(`/users/status/${rowId}`, {"status":status});
-            Swal.fire({
-                icon: "success",
-                title: `You have successfully ${status}ed`,
-                timer:2000
-            });
-            handleClose();
-            reloadTable();
-            
-        } catch (error) {
-            Swal.fire({
-                icon: "error",
-                title: "An error occured please try again!!!",
-                timer:2000
-              });
-        }
-    };
+    function createData(name, action) {
+        return { name, action };
+      }
+      
+    const rows = [
+    createData('Hotels', {rules: {
+        modify: false,
+        view: true,
+      }}),
+    createData('Packages', {rules: {
+        modify: false,
+        view: true,
+      }}),
+    createData('Users', {rules: {
+        modify: false,
+        view: true,
+      }}),
+    createData('Roles', {rules: {
+        modify: false,
+        view: true,
+      }}),
+    createData('Bookings', {rules: {
+        modify: false,
+        view: true,
+      }}),
+    ];
 
     useEffect(() => {
         setLoading(true);
-        axios.get("users").then((res) => {
-            setUsers(res.data);
+        axios.get("roles").then((res) => {
+            setRoles(res.data);
             setLoading(false)
         })
         .catch((error) => {
@@ -104,8 +120,8 @@ function UsersTable() {
 
     const reloadTable = async() => {
         setLoading(true);
-        await axios.get("users").then((res) => {
-            setUsers(res.data);
+        await axios.get("roles").then((res) => {
+            setRoles(res.data);
             setLoading(false);
         })
         .catch((error) => {
@@ -113,12 +129,12 @@ function UsersTable() {
         })
     };
 
-    const userDelete = async(data) => {
+    const roleDelete = async(data) => {
         try {
-            await axios.delete(`/users/${data._id}`);
+            await axios.delete(`/roles/${data._id}`);
             Swal.fire({
                 icon: "success",
-                title: `You have successfully deleted ${data.username}`,
+                title: `You have successfully deleted ${data.name}`,
                 timer:2000
             });
             handleDeleteModalClose();
@@ -136,7 +152,7 @@ function UsersTable() {
         {
           field: "action",
           headerName: "Action",
-          width: 100,
+          width: 150,
           renderCell: (params) => {
             return (
                 
@@ -173,10 +189,10 @@ function UsersTable() {
                                 Add New
                                 </Link>
                             </div>
-                            <DataGrid
-                                autoHeight 
-                                rows={users}
-                                columns={userColumns.concat(actionColumn)}
+                            <DataGrid 
+                                autoHeight
+                                rows={roles}
+                                columns={roleColumns.concat(actionColumn)}
                                 initialState={{
                                     pagination: {
                                         paginationModel: { page: 0, pageSize: 5 }
@@ -192,57 +208,49 @@ function UsersTable() {
                                 aria-describedby="child-modal-description"
                             >
                                 <Box sx={style}>
-                                    {/* <div className="new">
-                                        <div className="newContainer">
-                                            <div className="top">{userObj.username}</div>
-                                            <div className="bottom">
-                                                <div className="left">
-                                                    <div>
-                                                        Email: {userObj.email}
-                                                    </div>
-                                                    <div>
-                                                        phone: {userObj.phone}
-                                                    </div>
-                                                </div>
-                                                <div className="right">
-                                                    <div>
-                                                        Country: {userObj.country}
-                                                    </div>
-                                                    <div>
-                                                        City: {userObj.city}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {userObj.status === "active" ? (
-                                                <div><Button variant="outlined">Deactivate</Button></div>
-                                            ): (
-                                                <div><Button variant="outlined">Activate</Button></div>
-                                            )}
-                                        </div>
-                                    </div> */}
-                                    <Grid container spacing={2}>
-                                    <Grid item xs={6}>username:</Grid>
-                                    <Grid item xs={6}>{userObj.username}</Grid>
-                                    <Grid item xs={6}>Email:</Grid>
-                                    <Grid item xs={6}>{userObj.email}</Grid>
-                                    <Grid item xs={6}>Phone:</Grid>
-                                    <Grid item xs={6}>{userObj.phone}</Grid>
-                                    <Grid item xs={6}>Country:</Grid>
-                                    <Grid item xs={6}>{userObj.country}</Grid>
-                                    <Grid item xs={6}>City:</Grid>
-                                    <Grid item xs={6}>{userObj.city}</Grid>
-                                    <Grid item xs={4}></Grid>
-                                    <Grid item xs={4}>
-                                            {userObj.status === "active" ? (
-                                                        <div><Button onClick={() => handleUserStatus("suspend",userObj._id)} variant="outlined">Deactivate</Button></div>
-                                                    ): (
-                                                        <div><Button onClick={() => handleUserStatus("active",userObj._id)} variant="outlined">Activate</Button></div>
-                                            )}
-                                    </Grid>
-                                    <Grid item xs={4}></Grid>
-                                </Grid>
+                                    <form>
+                                        <input 
+                                            type="hidden"
+                                            name="roleId"
+                                            value=""
+                                        />
+                                        <TableContainer component={Paper}>
+                                            <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+                                                <TableHead>
+                                                <TableRow>
+                                                    <TableCell>Module</TableCell>
+                                                    <TableCell>Actions</TableCell>
+                                                </TableRow>
+                                                </TableHead>
+                                                <TableBody>
+                                                {rows.map((row) => (
+                                                    <TableRow
+                                                    key={row.name}
+                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                    >
+                                                    <TableCell component="th" scope="row">
+                                                        <FormControlLabel control={<Checkbox size="small" />} label={row.name}/>
+                                                    </TableCell>
+                                                    <TableCell component="th" scope="row">     
+                                                        {Object.values(row.action).map((value, index) => {
+                                                            return(
+                                                                Object.keys(value).map((value, index) => {
+                                                                    return (
+                                                                        <FormControlLabel control={<Checkbox size="small" key={index} />} label={value}/>                                                                        
+                                                                    );
+                                                                })
+                                                            );                                                                                                                        
+                                                        })}                                                                                                            
+                                                    </TableCell>                                                    
+                                                    </TableRow>
+                                                ))}
+                                                </TableBody>
+                                            </Table>
+                                        </TableContainer> 
+                                        <Button type="submit" size="small" variant="outlined" align="right"> Update</Button>
+                                    </form>
                                 </Box>
-                                
+                                                                                    
                             </Modal>
                             <Modal
                                 open={deleteModal}
@@ -253,14 +261,13 @@ function UsersTable() {
                                 <Box sx={style2}>
                                     <Card sx={{ maxWidth: 345 }}>
                                         <CardHeader
-                                            title="Delete Account"
+                                            title="Delete Role"
                                         />
                                         <CardContent>
-                                            <div><h2>Delete {userObj.username}</h2></div>
-                                            <div><p>Are you sure you want to delete {userObj.username} account</p></div>
+                                            <div><p>Are you sure you want to delete {roleObj.name} </p></div>
                                         </CardContent>
                                         <CardActions>
-                                            <Button size="small" onClick={() => userDelete(userObj)}>Yes</Button>
+                                            <Button size="small" onClick={() => roleDelete(roleObj)}>Yes</Button>
                                             <Button size="small" onClick={() => handleDeleteModalClose()}>Cancel</Button>
                                         </CardActions>
                                     </Card>
@@ -276,4 +283,4 @@ function UsersTable() {
     );
 };
 
-export default UsersTable;
+export default RolesTable;
