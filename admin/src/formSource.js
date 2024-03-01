@@ -36,6 +36,44 @@ export const userInputs = [
   },
 ];
 
+export const userEditInputs = [
+  {
+    id: "username",
+    label: "Username",
+    type: "text",
+    placeholder: "john_doe",
+    disabled: true,
+  },
+  {
+    id: "email",
+    label: "Email",
+    type: "email",
+    placeholder: "john_doe@gmail.com",
+    disabled: true,
+  },
+  {
+    id: "phone",
+    label: "Phone",
+    type: "text",
+    placeholder: "+1 234 567 89",
+    disabled: false,
+  },
+  {
+    id: "country",
+    label: "Country",
+    type: "text",
+    placeholder: "USA",
+    disabled: false,
+  },
+  {
+    id: "city",
+    label: "City",
+    type: "text",
+    placeholder: "USA",
+    disabled: false,
+  },
+];
+
 export const productInputs = [
   {
     id: 1,
