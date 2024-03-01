@@ -15,7 +15,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Swal from "sweetalert2";
 import { Link, useLocation } from "react-router-dom";
-import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { userColumns } from "../../datatablesource";
 import { CardHeader } from "@mui/material";
 
@@ -184,6 +184,7 @@ function UsersTable() {
                                 }}
                                 pageSizeOptions={[5, 10]}
                                 getRowId={(row) => row._id}
+                                disableRowSelectionOnClick
                             />
                             <Modal
                                 open={open}

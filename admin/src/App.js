@@ -2,6 +2,7 @@ import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
 import List from "./pages/list/List";
 import UsersTable from "./components/usersTable/UsersTable";
+import UserProfile from "./components/userProfile/UserProfile";
 import Single from "./pages/single/Single";
 import New from "./pages/new/New";
 import NewRole from "./pages/newRole/NewRole";
@@ -159,6 +160,16 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <NewRoom />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
+            <Route path="profile">
+              <Route
+                index
+                element={
+                  <ProtectedRoute module={"Home"} action={"view"}>
+                    <UserProfile />
                   </ProtectedRoute>
                 }
               />
