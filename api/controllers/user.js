@@ -44,3 +44,24 @@ export const changeStatus = async (req,res,next) => {
     next(err);
   }
 }
+
+export const getUsersCount =  async (req,res,next) => {
+  var startDate = req.query.startDate;
+  var endDate = req.query.endDate;
+  try {
+    const userCount = await User.aggregate([
+      {
+        $match: {createdAt : {
+          $gte: new Date(startDate),
+          $lt: new Date(endDate)
+        }}
+      },
+      {
+        $count: "users"
+      }
+    ]);
+    res.status(200).json(userCount);
+  } catch (error) {
+    next(error);
+  }
+};

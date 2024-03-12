@@ -47,6 +47,10 @@ const HotelSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-});
+  status :{
+    type: String,
+    default:"pending",
+  },
+}, { timestamps: true });
 
 export default mongoose.model("Hotel", HotelSchema)

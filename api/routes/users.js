@@ -4,7 +4,8 @@ import {
   deleteUser,
   getUser,
   getUsers,
-  changeStatus
+  changeStatus,
+  getUsersCount
 } from "../controllers/user.js";
 import { verifyAdmin, verifyToken, verifyUser } from "../utils/verifyToken.js";
 
@@ -36,5 +37,8 @@ router.post("/status/:id", verifyUser, changeStatus);
 
 //GET ALL
 router.get("/", verifyAdmin, getUsers);
+
+//Get count of users
+router.get("/count/status", getUsersCount);
 
 export default router;
