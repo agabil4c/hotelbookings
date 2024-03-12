@@ -97,3 +97,48 @@ export const getHotelRooms = async (req, res, next) => {
     next(err);
   }
 };
+
+export const getHotelCount = async (req,res,next) => {
+  try {
+    var startDate = req.query.startDate;
+    var endDate = req.query.endDate;
+    const hotelCount = await Hotel.aggregate([
+      {
+        $match: {createdAt : {
+          $gte: new Date(startDate),
+          $lt: new Date(endDate)
+        }}
+      },
+      {
+        $count: "hotels"
+      }
+    ]);
+    res.status(200).json(hotelCount);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getHotelGroup = async (req,res,next) => {
+  try {
+    var startDate = req.query.startDate;
+    var endDate = req.query.endDate;
+    const hotelData = await Hotel.aggregate([
+      {
+        $match: {createdAt : {
+          $gte: new Date(startDate),
+          $lt: new Date(endDate)
+        }}
+      },
+      {
+        $group: {
+          _id: "$city",
+          hotels: {$sum:1}
+        }
+      }
+    ]);
+    res.status(200).json(hotelData);
+  } catch (error) {
+    next(error);
+  }
+};
