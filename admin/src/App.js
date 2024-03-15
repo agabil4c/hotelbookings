@@ -1,6 +1,6 @@
 import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
-import List from "./pages/list/List";
+import Rooms from "./pages/rooms/rooms";
 import UsersTable from "./components/usersTable/UsersTable";
 import UserProfile from "./components/userProfile/UserProfile";
 import Single from "./pages/single/Single";
@@ -17,6 +17,7 @@ import { hotelColumns, roomColumns, roleColumns } from "./datatablesource";
 import NewHotel from "./pages/newHotel/NewHotel";
 import NewRoom from "./pages/newRoom/NewRoom";
 import RolesTable from "./components/rolesTable/rolesTable";
+import Hotels from "./pages/hotels/Hotels";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -117,7 +118,7 @@ function App() {
                 index
                 element={
                   <ProtectedRoute module={"Hotels"} action={"view"}>
-                    <List columns={hotelColumns} />
+                    <Hotels columns={hotelColumns} />
                   </ProtectedRoute>
                 }
               />
@@ -143,7 +144,7 @@ function App() {
                 index
                 element={
                   <ProtectedRoute>
-                    <List columns={roomColumns} />
+                    <Rooms columns={roomColumns} />
                   </ProtectedRoute>
                 }
               />

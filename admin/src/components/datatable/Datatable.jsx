@@ -2,7 +2,7 @@ import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import useFetch from "../../hooks/useFetch";
+import useFetch, { fetchHotels } from "../../hooks/useFetch";
 import axios from "axios";
 import { Modal } from "@mui/base";
 import { Box } from "@mui/material";
@@ -10,15 +10,27 @@ import { Box } from "@mui/material";
 const Datatable = ({columns}) => {
   const location = useLocation();
   const path = location.pathname.split("/")[1];
+  console.log('path>', path)
   const [list, setList] = useState();
-  const { data } = useFetch(`/${path}`);
-
+  
   const [open, setOpen] = useState(false);
   const [userObj, setUserObj] = useState({});
 
+  const getHotels = async () =>{
+    try{
+      const result = await fetchHotels(`/${path}`);
+      if (result) {
+        const { data } = result;
+        setList(data);
+      }
+    } catch(error){
+      alert(error.message);
+    }
+  }
+
   useEffect(() => {
-    setList(data);
-  }, [data]);
+    getHotels()
+  }, []);
 
   const handleDelete = async (id) => {
     try {
@@ -71,7 +83,7 @@ const Datatable = ({columns}) => {
         columns={columns.concat(actionColumn)}
         pageSize={9}
         rowsPerPageOptions={[9]}
-        checkboxSelection
+        // checkboxSelection
         getRowId={(row) => row._id}
       />
       
