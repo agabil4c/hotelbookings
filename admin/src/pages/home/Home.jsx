@@ -7,7 +7,6 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import Grid from '@mui/material/Grid';
 // import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import Widget from "../../components/widget/Widget";
 import { useEffect, useState } from "react";
@@ -41,21 +40,12 @@ const Home = () => {
                 onChange={(newValue) => setEndDate(newValue)}
               />
         </DemoContainer>
-          {/* <Grid container rowSpacing={1}>
-            <Grid item xl={6}>
-              
-            </Grid>
-            <Grid item xl={6}>
-              
-            </Grid>
-          </Grid> */}
         </LocalizationProvider>
         
         <div className="widgets">
           <Widget type="user" startDate={startDate} endDate={endDate} />
           <Widget type="hotel" startDate={startDate} endDate={endDate} />
           <Widget type="booking" startDate={startDate} endDate={endDate} />
-          <Widget type="balance" startDate={startDate} endDate={endDate} />
         </div>
         <div className="charts">
           <Featured />
