@@ -2,7 +2,7 @@ import "./hotelDatatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import fetchHotels  from "../../../hooks/hotelApiServices"
+import { fetchHotels }  from "../../../hooks/hotelApiServices"
 import Swal from "sweetalert2";
 import axios from "axios";
 import { Modal } from "@mui/base";
@@ -58,7 +58,10 @@ const HotelDatatable = ({columns}) => {
       renderCell: (params) => {
         return (
           <div className="cellAction">
-            <Link to="/users/test" style={{ textDecoration: "none" }}>
+            <Link
+              to={`/hotels/${params.row._id}`}
+              style={{ textDecoration: "none" }}
+            >
               <div className="viewButton">View</div>
             </Link>
             <div

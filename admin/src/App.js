@@ -18,6 +18,7 @@ import NewHotel from "./pages/newHotel/NewHotel";
 import NewRoom from "./pages/newRoom/NewRoom";
 import RolesTable from "./components/rolesTable/rolesTable";
 import Hotels from "./pages/hotels/Hotels";
+import Hotel from "./pages/hotels/hotel/Hotel";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -123,10 +124,10 @@ function App() {
                 }
               />
               <Route
-                path=":productId"
+                path=":hotelId"
                 element={
                   <ProtectedRoute module={"Hotels"} action={"view"}>
-                    <Single />
+                    <Hotel />
                   </ProtectedRoute>
                 }
               />

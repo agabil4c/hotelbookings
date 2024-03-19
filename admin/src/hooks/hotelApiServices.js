@@ -1,8 +1,11 @@
 import axios from "axios";
 
-const fetchHotels = async (url) => {
+export const fetchHotels = async (url) => {
   const res = await axios.get(url);
   return res
 };
 
-export default fetchHotels;
+export const fetchHotel = async (url) => {
+  const res = await axios.get(url);
+  return res
+};
