@@ -35,8 +35,3 @@ const useFetch = (url) => {
 };
 
 export default useFetch;
-
-export const fetchHotels = async (url) => {
-  const res = await axios.get(url);
-  return res
-};
