@@ -1,17 +1,16 @@
-import "./datatable.scss";
+import "./hotelDatatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import useFetch from "../../hooks/useFetch";
+import { fetchHotels }  from "../../../hooks/hotelApiServices"
+import Swal from "sweetalert2";
 import axios from "axios";
 import { Modal } from "@mui/base";
 import { Box } from "@mui/material";
-import { fetchHotels } from "../../hooks/hotelApiServices";
 
-const Datatable = ({columns}) => {
+const HotelDatatable = ({columns}) => {
   const location = useLocation();
   const path = location.pathname.split("/")[1];
-  console.log('path>', path)
   const [list, setList] = useState();
   
   const [open, setOpen] = useState(false);
@@ -25,7 +24,11 @@ const Datatable = ({columns}) => {
         setList(data);
       }
     } catch(error){
-      alert(error.message);
+      Swal.fire({
+        icon: "error",
+        title: error.message,
+        timer: 2000,
+      });
     }
   }
 
@@ -51,14 +54,16 @@ const Datatable = ({columns}) => {
     {
       field: "action",
       headerName: "Action",
-      width: 200,
+      width: 300,
       renderCell: (params) => {
         return (
           <div className="cellAction">
-            {/* <Link to="/users/test" style={{ textDecoration: "none" }}>
+            <Link
+              to={`/hotels/${params.row._id}`}
+              style={{ textDecoration: "none" }}
+            >
               <div className="viewButton">View</div>
-            </Link> */}
-            <button onClick={handleOpen(params.row)} className="viewButton">View</button>
+            </Link>
             <div
               className="deleteButton"
               onClick={() => handleDelete(params.row._id)}
@@ -84,7 +89,6 @@ const Datatable = ({columns}) => {
         columns={columns.concat(actionColumn)}
         pageSize={9}
         rowsPerPageOptions={[9]}
-        // checkboxSelection
         getRowId={(row) => row._id}
       />
       
@@ -92,4 +96,4 @@ const Datatable = ({columns}) => {
   );
 };
 
-export default Datatable;
+export default HotelDatatable;

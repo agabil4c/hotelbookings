@@ -58,6 +58,11 @@ export const hotelColumns = [
     headerName: "City",
     width: 100,
   },
+  {
+    field: "status",
+    headerName: "Status",
+    width: 100,
+  },
 ];
 
 export const roomColumns = [

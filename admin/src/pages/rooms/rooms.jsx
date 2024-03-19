@@ -1,9 +1,9 @@
-import "./list.scss"
+import "./rooms.scss"
 import Sidebar from "../../components/sidebar/Sidebar"
 import Navbar from "../../components/navbar/Navbar"
 import Datatable from "../../components/datatable/Datatable"
 
-const List = ({columns}) => {
+const Rooms = ({columns}) => {
   return (
     <div className="list">
       <Sidebar/>
@@ -15,4 +15,4 @@ const List = ({columns}) => {
   )
 }
 
-export default List
+export default Rooms
