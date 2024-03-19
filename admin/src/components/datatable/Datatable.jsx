@@ -2,10 +2,11 @@ import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import useFetch, { fetchHotels } from "../../hooks/useFetch";
+import useFetch from "../../hooks/useFetch";
 import axios from "axios";
 import { Modal } from "@mui/base";
 import { Box } from "@mui/material";
+import { fetchHotels } from "../../hooks/hotelApiServices";
 
 const Datatable = ({columns}) => {
   const location = useLocation();
