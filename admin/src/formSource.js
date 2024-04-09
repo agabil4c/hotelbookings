@@ -12,28 +12,24 @@ export const userInputs = [
     placeholder: "john_doe@gmail.com",
   },
   {
+    id: "firstname",
+    label: "Firstname",
+    type: "text",
+    placeholder: "John",
+  },
+  {
+    id: "lastname",
+    label: "Lastname",
+    type: "text",
+    placeholder: "Doe",
+  },
+  {
     id: "phone",
     label: "Phone",
     type: "text",
     placeholder: "+1 234 567 89",
   },
-  {
-    id: "password",
-    label: "Password",
-    type: "password",
-  },
-  {
-    id: "country",
-    label: "Country",
-    type: "text",
-    placeholder: "USA",
-  },
-  {
-    id: "city",
-    label: "City",
-    type: "text",
-    placeholder: "USA",
-  },
+  
 ];
 
 export const userEditInputs = [

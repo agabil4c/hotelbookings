@@ -2,14 +2,24 @@ import "./new.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
+import CircularProgress from '@mui/material/CircularProgress';
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const New = ({ inputs, title }) => {
+const New = ({ title }) => {
   const [file, setFile] = useState("");
   const [info, setInfo] = useState({});
   const [selectedRole, setSelectedRole] = useState("");
   const [roleData,setRoleData] = useState([])
+  const [countryData, setCountryData] = useState([]);
+  const [cityData, setCityData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [citySelected, setCitySelected] = useState(true);
+  const [gender, setGender] = useState("");
+  const [idType, setIdType] = useState("");
+  const [idNumber, setIdNumber] = useState("");
+  const [city, setCity] = useState("");
+  const [country, setCountry] = useState("");
 
   useEffect(() => {
     axios.get("/roles").then(res => {
@@ -18,11 +28,47 @@ const New = ({ inputs, title }) => {
     .catch(error => {
       console.log("The error is "+ error);
     })
+
+    //countries API
+    axios.get("https://countriesnow.space/api/v0.1/countries") .then((res) => {
+        setCountryData(res.data.data);
+    })
+    .catch((error) => {
+        console.log("The error "+ error);
+    })
   });
   
   const handleChange = (e) => {
     setInfo((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
+
+  const getCities = async (selectedCountry) => {
+      // setLoading(true);
+      // await axios.post("https://countriesnow.space/api/v0.1/countries/cities",{
+      //     "country": selectedCountry
+      // })
+      // .then((res) => {
+      //     setCityData(res.data.data);
+      //     setCitySelected(false);
+      //     setLoading(false);
+      // })
+      // .catch((error) => {
+      //     console.log(error);
+      //     setCitySelected(true);
+      //     setLoading(false);
+      // })
+      countryData.map((item) => {
+        if (item.country === selectedCountry){
+          setCityData(item.cities);
+          setCitySelected(false);
+        }
+      });
+  };
+
+const handleCountrySelect = (e) => {
+    setCountry(e.target.value);
+    getCities(e.target.value);
+};
 
   const handleSelection = (e) => {
     setSelectedRole(e.target.value);
@@ -43,12 +89,15 @@ const New = ({ inputs, title }) => {
       const { url } = uploadRes.data;
 
       const newUser = {
-        ...info,
         img: url,
-        role_id: selectedRole
+        role_id: selectedRole,
+        gender: gender,
+        idType:idType,
+        idNumber:idNumber,
+        isAdmin:true,
       };
-
-      await axios.post("/auth/register", newUser);
+      console.log("The users body "+ newUser);
+      // await axios.post("/auth/register", newUser);
     } catch (err) {
       console.log(err);
     }
@@ -96,7 +145,7 @@ const New = ({ inputs, title }) => {
                 </select>
               </div>
 
-              {inputs.map((input) => (
+              {/* {inputs.map((input) => (
                 <div className="formInput" key={input.id}>
                   <label>{input.label}</label>
                   <input
@@ -106,8 +155,54 @@ const New = ({ inputs, title }) => {
                     id={input.id}
                   />
                 </div>
-              ))}
-              <button onClick={handleClick}>Send</button>
+              ))} */}
+              <div className="formInput" key="gender">
+                  <label>Gender</label>
+                  <select name="gender" onChange={(e) => setGender(e.target.value)}>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Others</option>
+                  </select>
+              </div>
+              <div className="formInput" key="idType">
+                  <label>ID Type</label>
+                  <select name="idType" onChange={(e) => setIdType(e.target.value)}>
+                    <option value="nin">National ID</option>
+                    <option value="passport">Passport</option>
+                    <option value="refugee">Refugee Card</option>
+                  </select>
+              </div>
+              <div className="formInput">
+                <label>ID number</label>
+                <input 
+                  placeholder="ID Number"
+                  type={idType === "passport" ? "tel" : "text"}
+                  id="idNumber"
+                  onChange={(e) => setIdNumber(e.target.value)}
+                />
+              </div>
+              <div className="formInput" key="country">
+                  <label>Country</label>
+                  <select name="country" onChange={handleCountrySelect}>
+                      {countryData.map((item) => (
+                          <option value={item.country}>{item.country}</option>
+                      ))}
+                  </select>
+              </div>
+              <div className="formInput" key="city">
+                  <label>City</label>
+                  <select name="city" onChange={(e) => setCity(e.target.value)} disabled={citySelected}>
+                      {cityData.map((item) => (
+                          <option value={item}>{item}</option>
+                      ))}
+                  </select>
+              </div>
+              
+              {loading ? (
+                 <CircularProgress />
+              ) : (
+                <button onClick={handleClick}>Send</button>
+              )}
             </form>
           </div>
         </div>

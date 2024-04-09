@@ -14,6 +14,8 @@ const UserProfile = () => {
     const [loading, setLoading] = useState(false);
     const [pageLoading, setPageLoading] = useState(false);
     const [userData, setUserData] = useState({});
+    const [countryData, setCountryData] = useState([]);
+    const [cityData, setCityData] = useState([]);
     useEffect(() => {
         const savedData = JSON.parse(localStorage.getItem("user"));
         setPageLoading(true)
@@ -32,7 +34,6 @@ const UserProfile = () => {
             setCountry(receivedData.country);
             setEmail(receivedData.email);
             setUserName(receivedData.username);
-            setPageLoading(false)
         })
         .catch((error) => {
             console.log(error);
@@ -43,6 +44,13 @@ const UserProfile = () => {
                 timer:2000
               });
         })
+        axios.get("https://countriesnow.space/api/v0.1/countries") .then((res) => {
+            setCountryData(res.data.data);
+        })
+        .catch((error) => {
+            console.log("The error "+ error);
+        })
+        setPageLoading(false)
     }, []);
 
     const [username, setUserName] = useState("");
@@ -83,6 +91,26 @@ const UserProfile = () => {
                 timer:2000
               });
         }
+    };
+
+    const getCities = async (selectedCountry) => {
+        setLoading(true);
+        await axios.post("https://countriesnow.space/api/v0.1/countries/cities",{
+            "country": selectedCountry
+        })
+        .then((res) => {
+            setCityData(res.data.data);
+            setLoading(false);
+        })
+        .catch((error) => {
+            console.log(error);
+            setLoading(false);
+        })
+    };
+
+    const handleCountrySelect = (e) => {
+        setCountry(e.target.value);
+        getCities(e.target.value);
     };
 
     const handleSubmit = async (e) => {
@@ -194,26 +222,23 @@ const UserProfile = () => {
                                             onChange={(e) => setPhone(e.target.value)}
                                         />
                                     </div>
-                                    <div className="formInput" key="city">
-                                        <label>City</label>
-                                        <input
-                                            id="city"
-                                            type="text"
-                                            disabled={false}
-                                            value={city}
-                                            onChange={(e) => setCity(e.target.value)}
-                                        />
-                                    </div>
                                     <div className="formInput" key="country">
                                         <label>Country</label>
-                                        <input
-                                            id="country"
-                                            type="text"
-                                            disabled={false}
-                                            value={country}
-                                            onChange={(e) => setCountry(e.target.value)}
-                                        />
+                                        <select name="country" onChange={handleCountrySelect}>
+                                            {countryData.map((item) => (
+                                                <option value={item.country} selected={item.country.toLowerCase() === country.toLowerCase()}>{item.country}</option>
+                                            ))}
+                                        </select>
                                     </div>
+                                    <div className="formInput">
+                                        <label>City</label>
+                                        <select name="city" onChange={(e) => setCity(e.target.value)} disabled={country === ""}>
+                                            {cityData.map((item) => (
+                                                <option value={item} selected={item.toLowerCase() === city.toLowerCase()}>{item}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    
                                     {loading ? (
                                         <CircularProgress />
                                     ) :

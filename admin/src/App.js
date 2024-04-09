@@ -6,6 +6,8 @@ import UserProfile from "./components/userProfile/UserProfile";
 import Single from "./pages/single/Single";
 import New from "./pages/new/New";
 import NewRole from "./pages/newRole/NewRole";
+import ForgotPassword from "./components/forgotPassword/ForgotPassword";
+import ResetPassword from "./components/resetPassword/ResetPassword";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { userInputs } from "./formSource";
@@ -80,7 +82,7 @@ function App() {
                 path="new"
                 element={
                   <ProtectedRoute module={"Users"} action={"modify"}>
-                    <New inputs={userInputs} title="Add New User" />
+                    <New title="Add New User" />
                   </ProtectedRoute>
                 }
               />
@@ -171,6 +173,22 @@ function App() {
                   <ProtectedRoute module={"Home"} action={"view"}>
                     <UserProfile />
                   </ProtectedRoute>
+                }
+              />
+            </Route>
+            <Route path="forgot-password">
+              <Route
+                index
+                element={
+                  <ForgotPassword />
+                }
+              />
+            </Route>
+            <Route path="reset-password">
+              <Route
+                index
+                element={
+                  <ResetPassword />
                 }
               />
             </Route>

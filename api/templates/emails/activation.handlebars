@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Welcome to Our Platform</title>
+</head>
+<body>
+  <h1>Hello {{ user.firstname }}</h1>
+  <p class="text-justify">An account with this email has been registered but you need to confirm this address.</p>
+  <a href="{{ user.confirmationLink }}" target="_blank" style="box-sizing:border-box;display:inline-block;font-family:'Cabin',sans-serif;text-decoration:none;-webkit-text-size-adjust:none;text-align:center;color:#e3e0f0;background-color:#34495e;border-radius:4px;-webkit-border-radius:4px;-moz-border-radius:4px;width:auto;max-width:100%;overflow-wrap:break-word;word-break:break-word;word-wrap:break-word;mso-border-alt:none">
+    <span style="display:block;line-height:120%;padding:13px 55px"><span style="font-family:Cabin,sans-serif;font-size:16px;line-height:19.2px"><span style="line-height:19.2px;font-size:16px">Click to Confirm Request.</span></span></span>
+</a>
+  <blockquote>
+    Use <i>{{ user.password }}</i> as your password on login.
+    Endevour to change your password as soon as you login.
+</blockquote>
+</body>
+</html>

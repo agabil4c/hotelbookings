@@ -2,6 +2,8 @@ import axios from "axios";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
+import { Link } from "react-router-dom";
+import Button from '@mui/material/Button';
 // import { AuthContext } from "../../context/AuthContext";
 import "./login.scss";
 
@@ -55,8 +57,10 @@ const Login = () => {
           <button disabled={loading} onClick={handleClick} className="lButton primary">
             Login
           </button>
+          <button></button>
           {error && <span>{error.message}</span>}
           
+          <Button variant="text" href="/forgot-password"> Forgot Password</Button>
         </form>
       </div>
     </div>
