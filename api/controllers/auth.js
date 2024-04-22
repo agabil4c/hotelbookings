@@ -176,8 +176,7 @@ export const logout = async (req, res, next) => {
 export const forgotPassword = async (req, res, next) => {
   var userEmail = req.body.email;
   const user = await User.findOne({email:userEmail});
-  if (user.length !== 0) {
-    console.log("The user "+ user._id);
+  if (user) {
     var resetPasswordLink = process.env.CLIENT_URL+"/reset-password?token="+Buffer.from(user._id).toString('base64');
     const transporter = createTransport({
         service: "Gmail",
@@ -211,19 +210,17 @@ export const forgotPassword = async (req, res, next) => {
 
     transporter.sendMail(mailOptions, (error,info) => {
         if (error) {
-            console.error('Error sending email:', error);
             res.status(500).send("Email not sent please try again");
             // res.status(500).send("There was an error send verification email");
         }
         else {
-            console.log('Email sent:', info.response);
             // res.status(201).send("Email sent");
             res.status(200).send("Email successfully sent");
         }
     })
     
   } else {
-    res.status(400).send("Email not found");
+    res.status(500).send("Email not found");
   }
 }
 
@@ -252,4 +249,17 @@ export const resetPassword = async (req,res,next) => {
     next(error);
   }
   
+};
+
+export const changePassword = async (req,res,next) => {
+  try {
+    var userId = req.params.id;
+    const password = req.body.password;
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(password, salt);
+    const updatePassword = await User.findByIdAndUpdate(userId,{password: hash});
+    res.status(200).json(updatePassword);
+  } catch (error) {
+    next(error);
+  }
 };

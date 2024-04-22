@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const style2 = {
     position: "absolute",
@@ -19,30 +20,26 @@ const style2 = {
 
 const ForgotPassword = () => {
     const [email,setEmail] = useState("");
+    const [loading,setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         await axios.post("/auth/forgot-password",{email:email})
         .then((res) => {
-            if (res.status === 200) {
-                Swal.fire({
-                    icon: "success",
-                    title: `Reset Password email has been sent to ${email}`,
-                    timer:2000
-                });
-            } else {
-                Swal.fire({
-                    icon: "warning",
-                    title: `The email address is incorrect`,
-                    timer:4000
-                });
-            }
+            setLoading(false);
+            Swal.fire({
+                icon: "success",
+                title: `Reset Password email has been sent to ${email}`,
+                timer:2000
+            });
         })
         .catch((error) => {
-            console.log("The error "+ error);
+            setLoading(false);
             Swal.fire({
                 icon: "warning",
-                title: `There was an error please try again`,
+                title: `Error`,
+                text: error.response.data,
                 timer:4000
             });
         })
@@ -66,13 +63,18 @@ const ForgotPassword = () => {
                             
                         </Grid>
                         <Grid item xs={8}>
-                            <Button variant="outlined" color="success" type="submit" size="medium"> Reset Password</Button>
+                            {loading ? (
+                                <CircularProgress />
+                            ) :(
+                                <Button variant="outlined" color="success" type="submit" size="medium"> Reset Password</Button>
+                            )}
                         </Grid>
                     </Grid>
                     
                 </form>
             </div>
         </Box>
+        
     )
 }
 

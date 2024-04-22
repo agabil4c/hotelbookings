@@ -8,6 +8,7 @@ import New from "./pages/new/New";
 import NewRole from "./pages/newRole/NewRole";
 import ForgotPassword from "./components/forgotPassword/ForgotPassword";
 import ResetPassword from "./components/resetPassword/ResetPassword";
+import ChangePassword from "./components/changePassword/ChangePassword";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { userInputs } from "./formSource";
@@ -189,6 +190,26 @@ function App() {
                 index
                 element={
                   <ResetPassword />
+                }
+              />
+            </Route>
+            <Route path="change-password">
+              <Route
+                index
+                element={
+                  <ProtectedRoute module={"Home"} action={"view"}>
+                    <ChangePassword />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
+            <Route path="create-user">
+              <Route
+                index
+                element={
+                  <ProtectedRoute module={"Home"} action={"view"}>
+                    <New />
+                  </ProtectedRoute>
                 }
               />
             </Route>

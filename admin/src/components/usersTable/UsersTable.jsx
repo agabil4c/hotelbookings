@@ -169,7 +169,7 @@ function UsersTable() {
                         <div className="datatable">
                             <div className="datatableTitle">
                                 {path}
-                                <Link to={`/${path}/new`} className="link">
+                                <Link to="/create-user" className="link">
                                 Add New
                                 </Link>
                             </div>
