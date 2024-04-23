@@ -8,6 +8,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { TextField, Button, Grid } from '@mui/material';
+import Swal from "sweetalert2";
+import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -25,6 +27,11 @@ const New = () => {
   const [idNumber, setIdNumber] = useState("");
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const history = useNavigate();
 
   useEffect(() => {
     axios.get("/roles").then(res => {
@@ -41,33 +48,33 @@ const New = () => {
     .catch((error) => {
         console.log("The error "+ error);
     })
-  });
+  },[]);
   
   const handleChange = (e) => {
     setInfo((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
 
   const getCities = async (selectedCountry) => {
-      setLoading(true);
-      await axios.post("https://countriesnow.space/api/v0.1/countries/cities",{
-          "country": selectedCountry
-      })
-      .then((res) => {
-          setCityData(res.data.data);
-          setCitySelected(false);
-          setLoading(false);
-      })
-      .catch((error) => {
-          console.log(error);
-          setCitySelected(true);
-          setLoading(false);
-      })
-      // countryData.forEach((item) => {
-      //   if (item.country === selectedCountry){
-      //     setCityData(item.cities);
-      //     // setCitySelected(false);
-      //   }
-      // });
+      // setLoading(true);
+      // await axios.post("https://countriesnow.space/api/v0.1/countries/cities",{
+      //     "country": selectedCountry
+      // })
+      // .then((res) => {
+      //     setCityData(res.data.data);
+      //     setCitySelected(false);
+      //     setLoading(false);
+      // })
+      // .catch((error) => {
+      //     console.log(error);
+      //     setCitySelected(true);
+      //     setLoading(false);
+      // })
+      countryData.forEach((item) => {
+        if (item.country === selectedCountry){
+          setCityData(item.cities);
+          // setCitySelected(false);
+        }
+      });
   };
 
 const handleCountrySelect = (e) => {
@@ -82,27 +89,54 @@ const handleCountrySelect = (e) => {
 
   const handleClick = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const data = new FormData();
     data.append("file", file);
     data.append("upload_preset", "upload");
-    console.log("The data "+ data);
     try {
-      // const uploadRes = await axios.post(
-      //   "https://api.cloudinary.com/v1_1/dozi5ka8z/image/upload",
-      //   data
-      // );
-
-      // const { url } = uploadRes.data;
+      if (data.length > 0) {
+        const uploadRes = await axios.post(
+          "https://api.cloudinary.com/v1_1/dozi5ka8z/image/upload",
+          data
+        );
+  
+        const { url } = uploadRes.data;
+      }
 
       const newUser = {
         role_id: selectedRole,
+        firstname: firstName,
+        lastname: lastName,
+        phone: phone,
+        country: country,
+        email:email,
+        city:city,
         gender: gender,
         idType:idType,
         idNumber:idNumber,
         isAdmin:true,
+        img: ""
       };
-      console.log("The users body "+ newUser);
-      // await axios.post("/auth/register", newUser);
+      await axios.post("/auth/register", newUser)
+        .then((res) => {
+          setLoading(false);
+          Swal.fire({
+            icon: "success",
+            title: `You have successfully created user ${firstName} ${lastName}`,
+            timer:2000
+          });
+          history("/users");
+        })
+        .catch((error) => {
+          setLoading(false);
+          console.log("The error "+ error.response.data.message);
+          Swal.fire({
+            icon: "error",
+            title: `Failed to create the user`,
+            timer:4000
+          });
+        })
+
     } catch (err) {
       console.log(err);
     }
@@ -132,11 +166,52 @@ const handleCountrySelect = (e) => {
             <Grid item xs={6}>
               <Grid container spacing={2}>
                   <Grid item xs={12}>
+                      <TextField
+                        label="FirstName"
+                        type="text"
+                        fullWidth
+                        required
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                      />
+                  </Grid>
+                  <Grid item xs={12}>
+                      <TextField
+                        label="LastName"
+                        type="text"
+                        fullWidth
+                        required
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                      />
+                  </Grid>
+                  <Grid item xs={12}>
+                      <TextField
+                        label="Email"
+                        type="email"
+                        fullWidth
+                        required
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                  </Grid>
+                  <Grid item xs={12}>
+                      <TextField
+                        label="Phone Number"
+                        type="number"
+                        fullWidth
+                        required
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                      />
+                  </Grid>
+                  <Grid item xs={12}>
                     <FormControl variant="standard" fullWidth>
                       <InputLabel id="role-label">Role</InputLabel>
                       <Select
                         labelId="role"
                         id="role"
+                        required
                         value={selectedRole}
                         onChange={handleSelection}
                       >
@@ -155,6 +230,7 @@ const handleCountrySelect = (e) => {
                           labelId="gender"
                           id="gender"
                           value={gender}
+                          required
                           onChange={(e) => setGender(e.target.value)}
                         >
                           <MenuItem value="none"> Non Selected</MenuItem>
@@ -171,6 +247,7 @@ const handleCountrySelect = (e) => {
                         labelId="idType"
                         id="idType"
                         value={idType}
+                        required
                         onChange={(e) => setIdType(e.target.value)}
                       >
                         <MenuItem value="none"> Non Selected</MenuItem>
@@ -185,6 +262,7 @@ const handleCountrySelect = (e) => {
                       label="ID Number"
                       type="text"
                       fullWidth
+                      required
                       value={idNumber}
                       onChange={(e) => setIdNumber(e.target.value)}
                       />
@@ -196,6 +274,7 @@ const handleCountrySelect = (e) => {
                         labelId="country"
                         id="country"
                         value={country}
+                        required
                         onChange={handleCountrySelect}
                       >
                         <MenuItem value="none"> Non Selected</MenuItem>
@@ -205,13 +284,14 @@ const handleCountrySelect = (e) => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  {/* <Grid item xs={12}>
+                  <Grid item xs={12}>
                     <FormControl variant="standard" fullWidth>
                       <InputLabel id="city-label">City</InputLabel>
                       <Select
                         labelId="city"
                         id="city"
                         value={city}
+                        required
                         onChange={(e) => setCity(e.target.value)}
                       >
                         <MenuItem value="none"> Non Selected</MenuItem>
@@ -220,7 +300,7 @@ const handleCountrySelect = (e) => {
                         ))}
                       </Select>
                     </FormControl>
-                  </Grid> */}
+                  </Grid> 
                   <Grid item xs={12}>
                       {loading ? (
                           <CircularProgress />
