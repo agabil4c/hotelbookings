@@ -115,7 +115,8 @@ const handleCountrySelect = (e) => {
         idType:idType,
         idNumber:idNumber,
         isAdmin:true,
-        img: ""
+        img: "",
+        username: `${firstName} ${lastName}`
       };
       await axios.post("/auth/register", newUser)
         .then((res) => {
