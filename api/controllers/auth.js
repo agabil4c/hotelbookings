@@ -26,8 +26,7 @@ export const register = async (req, res, next) => {
 
     await newUser.save(function(error,result){
       if (error) {
-        console.log("The error "+ error);
-        next(createError(400,"Failed to create user"))
+        next(createError(400,error));
       }
       else {
         var confirmationLink = process.env.BASE_URL+"/api/auth/activate?signature="+Buffer.from(result._id).toString('base64');

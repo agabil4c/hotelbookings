@@ -130,12 +130,22 @@ const handleCountrySelect = (e) => {
         })
         .catch((error) => {
           setLoading(false);
-          console.log("The error "+ error.response.data.message);
-          Swal.fire({
-            icon: "error",
-            title: `Failed to create the user`,
-            timer:4000
-          });
+          if (error.response.data.message.code == 11000) {
+            Swal.fire({
+              icon: "error",
+              title: `Failed to create the user`,
+              text: "The email already exists",
+              timer:4000
+            });
+          }
+          else{
+            Swal.fire({
+              icon: "error",
+              title: `Internal server error. Please try again`,
+              timer:4000
+            });
+          }
+          
         })
 
     } catch (err) {
