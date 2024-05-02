@@ -25,3 +25,20 @@ import jwt from "jsonwebtoken";
     }
 };
 
+export const checkToken = (req,res,next) => {
+    const { access_token } = req.cookies;
+    if (!access_token) {
+    res.status(401).send('Authentication required.');
+    return;
+    }
+    jwt.verify(access_token, process.env.JWT, (err, decoded) => {
+    if (err) {
+    res.status(403).send('Invalid token.');
+    return;
+    }
+    next();
+    });
+};
+
+
+

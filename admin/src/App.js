@@ -6,6 +6,9 @@ import UserProfile from "./components/userProfile/UserProfile";
 import Single from "./pages/single/Single";
 import New from "./pages/new/New";
 import NewRole from "./pages/newRole/NewRole";
+import ForgotPassword from "./components/forgotPassword/ForgotPassword";
+import ResetPassword from "./components/resetPassword/ResetPassword";
+import ChangePassword from "./components/changePassword/ChangePassword";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { userInputs } from "./formSource";
@@ -80,7 +83,7 @@ function App() {
                 path="new"
                 element={
                   <ProtectedRoute module={"Users"} action={"modify"}>
-                    <New inputs={userInputs} title="Add New User" />
+                    <New title="Add New User" />
                   </ProtectedRoute>
                 }
               />
@@ -170,6 +173,42 @@ function App() {
                 element={
                   <ProtectedRoute module={"Home"} action={"view"}>
                     <UserProfile />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
+            <Route path="forgot-password">
+              <Route
+                index
+                element={
+                  <ForgotPassword />
+                }
+              />
+            </Route>
+            <Route path="reset-password">
+              <Route
+                index
+                element={
+                  <ResetPassword />
+                }
+              />
+            </Route>
+            <Route path="change-password">
+              <Route
+                index
+                element={
+                  <ProtectedRoute module={"Home"} action={"view"}>
+                    <ChangePassword />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
+            <Route path="create-user">
+              <Route
+                index
+                element={
+                  <ProtectedRoute module={"Home"} action={"view"}>
+                    <New />
                   </ProtectedRoute>
                 }
               />

@@ -8,8 +8,11 @@ import roomsRoute from "./routes/rooms.js";
 import rolesRoute from "./routes/roles.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import {engine} from "express-handlebars";
+import * as path from 'path';
 
 const app = express();
+// const {exphbs} = pkg;
 dotenv.config();
 
 const connect = async () => {
@@ -24,6 +27,14 @@ const connect = async () => {
 mongoose.connection.on("disconnected", () => {
   console.log("mongoDB disconnected!");
 });
+
+// Configure Express Handlebars
+app.engine('handlebars', engine());
+app.set('view engine', 'handlebars');
+
+// Set views directory
+const __dirname = path.resolve();
+app.set('views', './templates/emails');
 
 //middlewares
 app.use(cors());
