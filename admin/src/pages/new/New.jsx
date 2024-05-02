@@ -1,4 +1,5 @@
 import "./new.scss";
+import 'react-phone-number-input/style.css'
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
@@ -12,6 +13,7 @@ import Swal from "sweetalert2";
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import axios from "axios";
+import PhoneInput from "react-phone-number-input";
 
 const New = () => {
   const [file, setFile] = useState("");
@@ -29,8 +31,9 @@ const New = () => {
   const [country, setCountry] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState();
   const [email, setEmail] = useState("");
+  const [countryCode, setCountryCode] = useState("UG")
   const history = useNavigate();
 
   useEffect(() => {
@@ -85,6 +88,11 @@ const handleCountrySelect = (e) => {
   const handleSelection = (e) => {
     setSelectedRole(e.target.value);
   };
+
+  const handlePhoneChange = (val) => {
+    console.log("The val "+ val);
+    // setPhone(val);
+  }
 
 
   const handleClick = async (e) => {
@@ -207,14 +215,32 @@ const handleCountrySelect = (e) => {
                       />
                   </Grid>
                   <Grid item xs={12}>
-                      <TextField
+                      {/* <TextField 
+                        select
+                        label="country code"
+                        value={countryCode}
+                        onChange={(e) => setCountryCode(e.target.value)}
+                        variant="outlined"
+                      >
+                        <option value="UG">Uganda (+256)</option>
+                        <option value="US">United States (+1)</option>
+                      </TextField> */}
+                      <PhoneInput
+                        placeholder="Enter phone number"
+                        value={phone}
+                        onChange={setPhone}
+                        defaultCountry={countryCode}
+                        international
+                        fullWidth
+                      />
+                      {/* <TextField
                         label="Phone Number"
                         type="number"
                         fullWidth
                         required
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                      />
+                      /> */}
                   </Grid>
                   <Grid item xs={12}>
                     <FormControl variant="standard" fullWidth>
